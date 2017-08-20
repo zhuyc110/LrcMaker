@@ -1,0 +1,8 @@
+image: Visual Studio 2017
+platform:
+- Any CPU
+skip_branch_with_pr: true
+configuration:
+- Release
+before_build:
+- cmd nuget restore
