@@ -1,0 +1,17 @@
+﻿<infrastructure:DialogViewBase x:TypeArguments="viewModel:SetOffsetViewModel" x:Class="MyLrcMaker.View.SetOffsetView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyLrcMaker.View"
+             xmlns:viewModel="clr-namespace:MyLrcMaker.ViewModel"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:infrastructure="clr-namespace:MyLrcMaker.Infrastructure"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance {x:Type viewModel:SetOffsetViewModel}, IsDesignTimeCreatable=True}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <xctk:IntegerUpDown Grid.Row="0" Maximum="59" Minimum="-59" Grid.Column="0" Text="{Binding Offset, UpdateSourceTrigger=PropertyChanged}" Margin="1" />
+    </Grid>
+</infrastructure:DialogViewBase>
+

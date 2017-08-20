@@ -1,0 +1,50 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MyLrcMaker.View"
+    xmlns:model="clr-namespace:MyLrcMaker.Model"
+    xmlns:viewModel="clr-namespace:MyLrcMaker.ViewModel"
+    xmlns:converters="clr-namespace:MyLrcMaker.Converters" x:Class="MyLrcMaker.View.LrcBoardView"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance {x:Type viewModel:LrcBoardViewModel}, IsDesignTimeCreatable=True}"
+    d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:TimeSpanToLrcFormatConverter x:Key="TimeSpanToLrcFormatConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button Command="{Binding OpenLrcCommand}" Grid.Column="0" Grid.Row="0" Content="Open lrc" Margin="2" />
+        <Button Command="{Binding SaveLrcCommand}" Grid.Column="0" Grid.Row="1" Content="Save lrc" Margin="2" />
+        <Button Command="{Binding LrcOffsetCommand}" Grid.Column="0" Grid.Row="2" Content="Set offset" Margin="2" />
+        <ListView ItemsSource="{Binding LrcSource}" SelectedItem="{Binding Path=SelectedLrcModel}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type model:ILrcModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Time, Converter={StaticResource TimeSpanToLrcFormatConverter}, Mode=OneWay, StringFormat={}[{0}]}" Margin="3" />
+                        <TextBlock Text="{Binding Text}" Margin="2" />
+                        <StackPanel.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick"
+                                          Command="{Binding Path=DataContext.EditLrcCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:LrcBoardView}}}" />
+                        </StackPanel.InputBindings>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>
