@@ -106,7 +106,7 @@ namespace MyLrcMaker.Infrastructure
         private double _totalLength;
         private double _current;
 
-        private bool _isInitialized = false;
+        private bool _isInitialized;
 
         #endregion
     }
