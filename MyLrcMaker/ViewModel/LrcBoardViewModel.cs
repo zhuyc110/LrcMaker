@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
-using System.Windows.Forms;
 using System.Windows.Input;
 using MyLrcMaker.Infrastructure;
 using MyLrcMaker.Model;
@@ -39,6 +38,25 @@ namespace MyLrcMaker.ViewModel
             LrcSource = new ObservableCollection<ILrcModel>(lrcManager.LrcModels);
         }
 
+        #region Private methods
+
+        private void EditLrc()
+        {
+            _ioService.ShowDialog(new EditLrcViewModel(SelectedLrcModel, _songService), new DialogSetting {Height = 100, Width = 250});
+        }
+
+        private void LoadLrc()
+        {
+            var file = _ioService.OpenFileDialog("打开歌词文件", "歌词文件|*.txt;*.lrc", false);
+            if (string.IsNullOrWhiteSpace(file))
+            {
+                return;
+            }
+            _lrcManager.LoadLrcFromInputString(file);
+            LrcSource.Clear();
+            LrcSource.AddRange(_lrcManager.LrcModels);
+        }
+
         private void OpenOffset()
         {
             var viewModel = new SetOffsetViewModel();
@@ -52,36 +70,14 @@ namespace MyLrcMaker.ViewModel
             }
         }
 
-        #region Private methods
-
-        private void EditLrc()
-        {
-            _ioService.ShowDialog(new EditLrcViewModel(SelectedLrcModel, _songService), new DialogSetting {Height = 100, Width = 250});
-        }
-
-        private void LoadLrc()
-        {
-            using (var ofd = new OpenFileDialog {Filter = "歌词文件|*.txt;*.lrc", Multiselect = false, Title = "打开歌词文件"})
-            {
-                var result = ofd.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    _lrcManager.LoadLrcFromInputString(ofd.FileName);
-                    LrcSource.Clear();
-                    LrcSource.AddRange(_lrcManager.LrcModels);
-                }
-            }
-        }
-
         private void SaveLrc()
         {
-            using (var sfd = new SaveFileDialog {Filter = "歌词文件|*.txt;*.lrc", Title = "保存歌词文件"})
+            var file = _ioService.SaveFileDialog("保存歌词文件", "歌词文件|*.txt;*.lrc");
+            if (string.IsNullOrWhiteSpace(file))
             {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    _lrcManager.SaveLrcToFile(sfd.FileName, LrcSource);
-                }
+                return;
             }
+            _lrcManager.SaveLrcToFile(file, LrcSource);
         }
 
         #endregion

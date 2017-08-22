@@ -34,12 +34,13 @@ namespace MyLrcMaker.ViewModel
             }
         }
 
-        public ISongService SongService => _songService;
+        public ISongService SongService { get; }
 
         [ImportingConstructor]
-        public MainViewModel(LrcBoardViewModel lrcBoardViewModel, ISongService songService)
+        public MainViewModel(LrcBoardViewModel lrcBoardViewModel, ISongService songService, IIOService ioService)
         {
-            _songService = songService;
+            SongService = songService;
+            _ioService = ioService;
             LrcBoardViewModel = lrcBoardViewModel;
             OpenMediaCommand = new DelegateCommand(OpenMediaFile);
             PlayMediaCommand = new DelegateCommand<MediaPlayerCommand?>(Play, CanPlay);
@@ -80,28 +81,24 @@ namespace MyLrcMaker.ViewModel
 
         private void OpenMediaFile()
         {
-            using (var dialog = new OpenFileDialog())
+            var file = _ioService.OpenFileDialog("打开音频文件", "音频文件|*.mp3;*.wav", false);
+            if (string.IsNullOrWhiteSpace(file))
             {
-                dialog.Title = "打开音频文件";
-                dialog.Multiselect = false;
-                dialog.Filter = "音频文件|*.mp3;*.wav";
-
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    MediaSource = new Uri(dialog.FileName);
-                }
+                return;
             }
+
+            MediaSource = new Uri(file);
         }
 
         private void Pause(MediaPlayerCommand? command)
         {
-            _songService.Pause();
+            SongService.Pause();
             RaiseMediaPlayerStatusChange(command);
         }
 
         private void Play(MediaPlayerCommand? command)
         {
-            _songService.Play();
+            SongService.Play();
             RaiseMediaPlayerStatusChange(command);
         }
 
@@ -116,7 +113,7 @@ namespace MyLrcMaker.ViewModel
 
         #region Fields
 
-        private readonly ISongService _songService;
+        private readonly IIOService _ioService;
 
         private Uri _mediaSource;
         private MediaPlayerCommand _preCommand = MediaPlayerCommand.Stop;

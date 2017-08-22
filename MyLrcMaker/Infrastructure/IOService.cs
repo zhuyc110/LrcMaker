@@ -2,6 +2,7 @@
 using System.Windows;
 using Microsoft.Practices.ServiceLocation;
 using Prism.Mvvm;
+using System.Windows.Forms;
 
 namespace MyLrcMaker.Infrastructure
 {
@@ -24,6 +25,33 @@ namespace MyLrcMaker.Infrastructure
             ShowView(view, dialogSetting);
         }
 
+        public string OpenFileDialog(string title, string filter, bool multiselect)
+        {
+            using (var ofd = new OpenFileDialog { Filter = filter, Multiselect = multiselect, Title = title })
+            {
+                var result = ofd.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    return ofd.FileName;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        public string SaveFileDialog(string title, string filter)
+        {
+            using (var sfd = new SaveFileDialog { Filter = filter, Title = title })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    return sfd.FileName;
+                }
+            }
+
+            return string.Empty;
+        }
+
         #endregion
 
         #region Private methods
@@ -32,7 +60,6 @@ namespace MyLrcMaker.Infrastructure
         {
             var window = new Window
             {
-                Owner = Application.Current.MainWindow,
                 Title = view.Title,
                 Content = view,
                 Width = dialogSetting?.Width ?? 200,
