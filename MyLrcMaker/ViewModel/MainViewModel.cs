@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.Windows.Forms;
 using System.Windows.Input;
 using MyLrcMaker.Extension;
 using MyLrcMaker.Infrastructure;

@@ -11,7 +11,12 @@
              d:DataContext="{d:DesignInstance {x:Type viewModel:SetOffsetViewModel}, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         <xctk:IntegerUpDown Grid.Row="0" Maximum="59" Minimum="-59" Grid.Column="0" Text="{Binding Offset, UpdateSourceTrigger=PropertyChanged}" Margin="1" />
+        <TextBlock Grid.Column="1" Text="秒" VerticalAlignment="Center"></TextBlock>
     </Grid>
 </infrastructure:DialogViewBase>
 

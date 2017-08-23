@@ -37,6 +37,16 @@ namespace MyLrcMaker.Test.Infrastructure
             Assert.That(ObjectUderTest.TotalLength, Is.EqualTo(_mockSongLength.TotalMilliseconds));
         }
 
+        [Test]
+        public void CurrentShouldEqualToTotalWhenSongEnded()
+        {
+            // act 
+            _mediaElementHostMock.Raise(x => x.MediaEnded += null, new RoutedEventArgs());
+
+            // assert
+            Assert.That(ObjectUderTest.Current, Is.EqualTo(_mockSongLength.TotalMilliseconds));
+        }
+
         private readonly Mock<IMediaElementHost> _mediaElementHostMock = new Mock<IMediaElementHost>();
         private readonly TimeSpan _mockSongLength = new TimeSpan(0, 0, 3, 25, 123);
     }

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Windows.Input;
+using MyLrcMaker.Extension;
 using MyLrcMaker.Infrastructure;
 using MyLrcMaker.Model;
 using Prism.Commands;
@@ -31,11 +34,13 @@ namespace MyLrcMaker.ViewModel
             _lrcManager = lrcManager;
             _ioService = ioService;
             _songService = songService;
+            LrcSource = new ObservableCollection<ILrcModel>(lrcManager.LrcModels);
+            LrcSource.CollectionChanged += OnLrcCollectionChanged;
+
             OpenLrcCommand = new DelegateCommand(LoadLrc);
             SaveLrcCommand = new DelegateCommand(SaveLrc);
             EditLrcCommand = new DelegateCommand(EditLrc);
-            LrcOffsetCommand = new DelegateCommand(OpenOffset);
-            LrcSource = new ObservableCollection<ILrcModel>(lrcManager.LrcModels);
+            LrcOffsetCommand = new DelegateCommand(OpenOffset, () => LrcSource.Any());
         }
 
         #region Private methods
@@ -43,6 +48,11 @@ namespace MyLrcMaker.ViewModel
         private void EditLrc()
         {
             _ioService.ShowDialog(new EditLrcViewModel(SelectedLrcModel, _songService), new DialogSetting {Height = 100, Width = 250});
+        }
+
+        private void ForceUpdateCanExecuteCommands()
+        {
+            LrcOffsetCommand.ForceUpdateCanExecuteCommand();
         }
 
         private void LoadLrc()
@@ -55,6 +65,11 @@ namespace MyLrcMaker.ViewModel
             _lrcManager.LoadLrcFromInputString(file);
             LrcSource.Clear();
             LrcSource.AddRange(_lrcManager.LrcModels);
+        }
+
+        private void OnLrcCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ForceUpdateCanExecuteCommands();
         }
 
         private void OpenOffset()

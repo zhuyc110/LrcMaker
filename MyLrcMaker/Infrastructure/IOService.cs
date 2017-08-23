@@ -3,6 +3,7 @@ using System.Windows;
 using Microsoft.Practices.ServiceLocation;
 using Prism.Mvvm;
 using System.Windows.Forms;
+using Application = System.Windows.Application;
 
 namespace MyLrcMaker.Infrastructure
 {
@@ -60,6 +61,7 @@ namespace MyLrcMaker.Infrastructure
         {
             var window = new Window
             {
+                Owner = Application.Current.MainWindow,
                 Title = view.Title,
                 Content = view,
                 Width = dialogSetting?.Width ?? 200,
