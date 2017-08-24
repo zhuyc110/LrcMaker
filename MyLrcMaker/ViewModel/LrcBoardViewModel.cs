@@ -9,6 +9,7 @@ using MyLrcMaker.Infrastructure;
 using MyLrcMaker.Model;
 using Prism.Commands;
 using Prism.Mvvm;
+using UiText = MyLrcMaker.Resources.UiTexts.MyLrcMaker;
 
 namespace MyLrcMaker.ViewModel
 {
@@ -23,6 +24,8 @@ namespace MyLrcMaker.ViewModel
         public ICommand EditLrcCommand { get; }
 
         public ICommand LrcOffsetCommand { get; }
+
+        public ICommand SetCurrentCommand { get; }
 
         public ObservableCollection<ILrcModel> LrcSource { get; set; }
 
@@ -41,6 +44,7 @@ namespace MyLrcMaker.ViewModel
             SaveLrcCommand = new DelegateCommand(SaveLrc);
             EditLrcCommand = new DelegateCommand(EditLrc);
             LrcOffsetCommand = new DelegateCommand(OpenOffset, () => LrcSource.Any());
+            SetCurrentCommand = new DelegateCommand(SetCurrent);
         }
 
         #region Private methods
@@ -57,7 +61,7 @@ namespace MyLrcMaker.ViewModel
 
         private void LoadLrc()
         {
-            var file = _ioService.OpenFileDialog("打开歌词文件", "歌词文件|*.txt;*.lrc", false);
+            var file = _ioService.OpenFileDialog(UiText.OpenLrcDialog_Title, UiText.OpenSaveLrcDialog_Filter, false);
             if (string.IsNullOrWhiteSpace(file))
             {
                 return;
@@ -87,12 +91,22 @@ namespace MyLrcMaker.ViewModel
 
         private void SaveLrc()
         {
-            var file = _ioService.SaveFileDialog("保存歌词文件", "歌词文件|*.txt;*.lrc");
+            var file = _ioService.SaveFileDialog(UiText.SaveLrcDialog_Title, UiText.OpenSaveLrcDialog_Filter);
             if (string.IsNullOrWhiteSpace(file))
             {
                 return;
             }
             _lrcManager.SaveLrcToFile(file, LrcSource);
+        }
+
+        private void SetCurrent()
+        {
+            if (SelectedLrcModel == null)
+            {
+                return;
+            }
+
+            SelectedLrcModel.Time = TimeSpan.FromMilliseconds(_songService.Current);
         }
 
         #endregion
