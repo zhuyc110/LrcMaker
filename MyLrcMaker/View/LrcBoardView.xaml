@@ -30,15 +30,16 @@
         <Button Command="{Binding LrcOffsetCommand}" Grid.Column="0" Grid.Row="2" Content="Set offset" Margin="2" />
         <Button Command="{Binding SetCurrentCommand}" Grid.Column="0" Grid.Row="3" Content="Set current" Margin="2" />
         <ListView ItemsSource="{Binding LrcSource}" SelectedItem="{Binding Path=SelectedLrcModel}" Grid.Column="1" Grid.Row="0" Grid.RowSpan="5">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type model:ILrcModel}">
+            <ListView.Resources>
+                <DataTemplate DataType="{x:Type model:LrcTagModel}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Time, Converter={StaticResource TimeSpanToLrcFormatConverter}, Mode=OneWay, StringFormat={}[{0}]}" Margin="3" />
+                        <TextBlock Text="{Binding Tag.Value, Mode=OneWay}" Margin="2"/>
+                        <TextBlock Text="{Binding Text}" Margin="2" />
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type model:LrcModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Time, Converter={StaticResource TimeSpanToLrcFormatConverter}, Mode=OneWay, StringFormat={}[{0}]}" Margin="3,2"/>
                         <TextBlock Text="{Binding Text}" Margin="2" />
                         <StackPanel.InputBindings>
                             <MouseBinding MouseAction="LeftDoubleClick"
@@ -46,7 +47,12 @@
                         </StackPanel.InputBindings>
                     </StackPanel>
                 </DataTemplate>
-            </ListView.ItemTemplate>
+            </ListView.Resources>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
     </Grid>
 </UserControl>

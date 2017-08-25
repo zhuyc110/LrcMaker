@@ -60,8 +60,7 @@ namespace MyLrcMaker.Model
             var rawContent = content.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
             foreach (var line in rawContent)
             {
-                var lrc = new LrcModel(line);
-                LrcModels.Add(lrc);
+                CreateLrcModelFromRawText(line);
             }
         }
 
@@ -74,16 +73,30 @@ namespace MyLrcMaker.Model
                     var line = sr.ReadLine();
                     for (; line != null; line = sr.ReadLine())
                     {
-                        if (string.IsNullOrWhiteSpace(line))
-                        {
-                            continue;
-                        }
-
-                        var lrc = new LrcModel(line);
-                        LrcModels.Add(lrc);
+                        CreateLrcModelFromRawText(line);
                     }
                 }
             }
+        }
+
+        private void CreateLrcModelFromRawText(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return;
+            }
+
+            ILrcModel lrc;
+
+            if (line.Trim().EndsWith("]"))
+            {
+                lrc = new LrcTagModel(line);
+            }
+            else
+            {
+                lrc = new LrcModel(line);
+            }
+            LrcModels.Add(lrc);
         }
 
         #endregion

@@ -106,11 +106,13 @@
     <Compile Include="Infrastructure\ResultViewModel.cs" />
     <Compile Include="Infrastructure\SongService.cs" />
     <Compile Include="Infrastructure\ViewModelBase.cs" />
+    <Compile Include="Model\ILrcTagModel.cs" />
     <Compile Include="Model\ILrcManager.cs" />
     <Compile Include="Model\ILrcModel.cs" />
     <Compile Include="Infrastructure\ISongService.cs" />
     <Compile Include="Model\LrcManager.cs" />
     <Compile Include="Model\LrcModel.cs" />
+    <Compile Include="Model\LrcTagModel.cs" />
     <Compile Include="Resources\UiTexts\MyLrcMaker.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
